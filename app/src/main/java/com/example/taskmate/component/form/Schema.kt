@@ -5,7 +5,7 @@ package com.example.taskmate.component.form
  *
  * @param field A vararg parameter where each entry is a pair of field name and a function that creates a [Validator] for that field.
  */
-class Schema(vararg field: Pair<String, (String, Map<String, Any>) -> Validator>) {
+class Schema(vararg field: Pair<String, (Any, Map<String, Any>) -> Validator>) {
     // Map of field names to their corresponding validators
     private val validators = mapOf(*field)
 
