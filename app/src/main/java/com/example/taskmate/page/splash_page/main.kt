@@ -41,7 +41,9 @@ import java.io.File
 
 @Composable
 fun SplashPage(navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF0F4F3))) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(0xFFF0F4F3))) {
         Image(
             painter = painterResource(id = R.drawable.top_bubble),
             contentDescription = "",
@@ -59,7 +61,7 @@ fun SplashPage(navController: NavController) {
             Image(
                 painter = painterResource(id = R.drawable.splash_img),
                 contentDescription = "",
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.size(width = 254.dp, height = 194.dp),
                 contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(65.dp))
@@ -73,7 +75,7 @@ fun SplashPage(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(136.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("/login") },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF50C2C9)),
                 modifier = Modifier
@@ -85,31 +87,4 @@ fun SplashPage(navController: NavController) {
 
         }
     }
-}
-
-@Composable
-fun AsyncImageFromAssets(
-    assetPath: String,
-    contentDescription: String?,
-    modifier: Modifier = Modifier
-) {
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data("file:///android_asset/$assetPath")
-            .build()
-    )
-
-    Image(
-        painter = painter,
-        contentDescription = contentDescription,
-        contentScale = ContentScale.Crop,
-        modifier = modifier
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    SplashPage(rememberNavController())
 }
