@@ -3,13 +3,12 @@ package com.example.taskmate.component.form
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 
-class FieldProperty private constructor(
+class FormFieldProperty private constructor(
     val enable: Boolean,
     val readOnly: Boolean,
     val isError: Boolean,
@@ -78,8 +77,8 @@ class FieldProperty private constructor(
             return clone() as Builder
         }
 
-        fun build(): FieldProperty {
-            return FieldProperty(
+        fun build(): FormFieldProperty {
+            return FormFieldProperty(
                 enable,
                 readOnly,
                 isError,
