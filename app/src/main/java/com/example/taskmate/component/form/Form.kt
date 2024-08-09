@@ -29,7 +29,7 @@ val LocalFormState = compositionLocalOf<FormState> { error("No FormState provide
  */
 @Composable
 fun Form(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     vertical: Arrangement.Vertical = Arrangement.Top,
     horizontal: Alignment.Horizontal = Alignment.Start,
     initialValue: Map<String, Any>,

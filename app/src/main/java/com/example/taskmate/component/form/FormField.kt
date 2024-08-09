@@ -1,6 +1,5 @@
 package com.example.taskmate.component.form
 
-import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -15,14 +14,14 @@ import androidx.compose.ui.text.TextStyle
  * @param modifier Optional [Modifier] to be applied to the [TextField]. Defaults to [Modifier].
  * @param name The unique name for this field, used to retrieve and update its value in the form state.
  * @param errorTextStyle Optional [TextStyle] for styling error messages. Defaults to red text.
- * @param property An instance of [FieldProperty.Builder] used to configure various properties of the [TextField].
+ * @param property An instance of [FormFieldProperty.Builder] used to configure various properties of the [TextField].
  */
 @Composable
-fun Field(
+fun FormField(
     modifier: Modifier = Modifier,
     name: String,
     errorTextStyle: TextStyle = TextStyle(color = Color.Red),
-    property: FieldProperty.Builder = FieldProperty.Builder(),
+    property: FormFieldProperty.Builder = FormFieldProperty.Builder(),
 ) {
     // Obtain the current form state from the composition local
     val formState = LocalFormState.current
@@ -30,11 +29,13 @@ fun Field(
     // Retrieve the current value of the field from the form state
     val value: String = formState.values[name] as String
 
-    // Build the field properties from the provided FieldProperty.Builder
-    val fieldProperty = property.build()
-
     // Retrieve any validation errors associated with this field
     val error = formState.errors[name] ?: emptyList()
+
+    // Build the field properties from the provided FieldProperty.Builder
+    val fieldProperty = property.setIsError(error.isNotEmpty()).build()
+
+
 
     // Define a composable function to display the error message with the specified text style
     val supportText: (@Composable () -> Unit) = {
@@ -52,7 +53,7 @@ fun Field(
         enabled = fieldProperty.enable,
         supportingText = if (error.isNotEmpty()) supportText else null,
         readOnly = fieldProperty.readOnly,
-        isError = error.isNotEmpty(),
+        isError = fieldProperty.isError,
         singleLine = fieldProperty.singleLine,
         visualTransformation = fieldProperty.visualTransformation,
         maxLines = fieldProperty.maxLines,
