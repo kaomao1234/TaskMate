@@ -29,34 +29,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.taskmate.R
-import com.example.taskmate.component.form.Field
-import com.example.taskmate.component.form.FieldProperty
+import com.example.taskmate.component.form.FormField
+import com.example.taskmate.component.form.FormFieldProperty
 import com.example.taskmate.component.form.Form
 import com.example.taskmate.component.form.Schema
 import com.example.taskmate.component.form.Validator
 
 @Composable
-fun RegistrationPage() {
-    val schema = Schema(
-        "fullname" to { value, _ -> Validator(value).require() },
-        "email" to { value, _ -> Validator(value).require().emailForm() },
-        "password" to { value, entire ->
-            Validator(value).require().notEqualString(
-                entire["confirmPassword"]!!,
-                message = "it not same confirm password."
-            ).minLength(8)
-        },
-        "confirmPassword" to { value, entire ->
-            Validator(value).require()
-                .notEqualString(entire["password"]!!, message = "it not same password.")
-                .minLength(8)
-        }
+fun RegistrationPage(navController: NavController) {
+    val initialVal = mapOf(
+        "fullname" to "",
+        "email" to "",
+        "password" to "",
+        "confirmPassword" to ""
     )
+
     val handleSubmit: (value: Map<String, Any>) -> Unit = {
 //        Log.d("handleSubmit", "RegistrationPage: $initialValue")
     }
-    val property = FieldProperty.Builder().setShape(RoundedCornerShape(100.dp)).setColors(
+    val property = FormFieldProperty.Builder().setShape(RoundedCornerShape(100.dp)).setColors(
         TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -83,13 +77,24 @@ fun RegistrationPage() {
                 .padding(bottom = 29.dp),
             vertical = Arrangement.Bottom,
             horizontal = Alignment.CenterHorizontally,
-            initialValue = mapOf<String, Any>(
-                "fullname" to "",
-                "email" to "",
-                "password" to "",
-                "confirmPassword" to ""
-            ),
-            schema = schema,
+            initialValue = initialVal,
+            schema = Schema(
+                "fullname" to { value, _ -> Validator(value).require() },
+                "email" to { value, _ -> Validator(value).require().emailForm() },
+                "password" to { value, entire ->
+                    Validator(value).require().notEqualString(
+                        entire["confirmPassword"]!!.toString(),
+                        message = "it not same confirm password."
+                    ).minLength(8)
+                },
+                "confirmPassword" to { value, entire ->
+                    Validator(value).require()
+                        .notEqualString(
+                            entire["password"]!!.toString(),
+                            message = "it not same password."
+                        )
+                        .minLength(8)
+                }),
             onSubmit = handleSubmit
         ) {
             Text("Welcome to Onboard!", fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -100,35 +105,35 @@ fun RegistrationPage() {
                 style = TextStyle(textAlign = TextAlign.Center)
             )
             Spacer(modifier = Modifier.height(90.dp))
-            Field(
+            FormField(
                 name = "fullname",
                 modifier = Modifier.fillMaxWidth(),
                 property = property.copy().setPlaceholder {
-                    Text("Enter your full name")
+                    Text("Enter your full name", fontSize = 13.sp)
                 }
             )
             Spacer(modifier = Modifier.height(30.dp))
-            Field(
+            FormField(
                 name = "email",
                 modifier = Modifier.fillMaxWidth(),
                 property = property.copy().setPlaceholder {
-                    Text("Enter your Email")
+                    Text("Enter your Email", fontSize = 13.sp)
                 }
             )
             Spacer(modifier = Modifier.height(30.dp))
-            Field(
+            FormField(
                 name = "password",
                 modifier = Modifier.fillMaxWidth(),
                 property = property.copy().setPlaceholder {
-                    Text("Enter Password")
+                    Text("Enter Password", fontSize = 13.sp)
                 }.setVisualTransformation(PasswordVisualTransformation())
             )
             Spacer(modifier = Modifier.height(30.dp))
-            Field(
+            FormField(
                 name = "confirmPassword",
                 modifier = Modifier.fillMaxWidth(),
                 property = property.copy().setPlaceholder {
-                    Text("Confirm password")
+                    Text("Confirm password", fontSize = 13.sp)
                 }.setVisualTransformation(PasswordVisualTransformation())
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -140,7 +145,7 @@ fun RegistrationPage() {
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text(text = "Submit", fontSize = 18.sp)
+                Text(text = "Register", fontSize = 18.sp)
             }
             Spacer(modifier = Modifier.height(19.dp))
             Row(
@@ -155,6 +160,7 @@ fun RegistrationPage() {
                     style = TextStyle(color = Color(0xFF50C2C9)),
                     modifier = Modifier
                         .clickable {
+                            navController.navigate("/login")
                         }
                         .padding(start = 2.dp)
                 )
@@ -162,10 +168,4 @@ fun RegistrationPage() {
         }
     }
 
-}
-
-@Preview
-@Composable
-fun Preview() {
-    RegistrationPage()
 }
