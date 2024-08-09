@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,18 +53,34 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "/registration") {
-        composable("/") {
+    val enterTransition = {
+        slideInHorizontally(
+            initialOffsetX = { fullWidth -> fullWidth }
+        ) + fadeIn(initialAlpha = 0F)
+    }
+    val exitTransition = {
+        slideOutHorizontally(
+            targetOffsetX = { fullWidth -> fullWidth }
+        ) + fadeOut(targetAlpha = 0F)
+    }
+    NavHost(
+        navController = navController,
+        startDestination = "/dashboard",
+        exitTransition = { exitTransition() },
+        enterTransition = { enterTransition() }) {
+        composable(
+            "/",
+        ) {
             SplashPage(navController)
         }
         composable("/login") {
-            LoginPage()
+            LoginPage(navController)
         }
         composable("/registration") {
-            RegistrationPage()
+            RegistrationPage(navController)
         }
         composable("/dashboard") {
-            DashboardPage()
+            DashboardPage(navController)
         }
     }
 }
